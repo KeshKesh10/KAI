@@ -1,18 +1,20 @@
-"""
-Google Calendar integration tool
-Handles calendar events - add, list, update, delete
-Requires Google Calendar API setup
-"""
+"""Google Calendar integration (optional)"""
 
 import os
 import json
 from datetime import datetime, timedelta
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from google.auth.oauthlib.flow import InstalledAppFlow
-from google_auth_httplib2 import AuthorizedHttp
-from googleapiclient.discovery import build
-import httplib2
+
+# Try to import Google Calendar dependencies
+try:
+    from google.auth.transport.requests import Request
+    from google.oauth2.credentials import Credentials
+    from google.auth.oauthlib.flow import InstalledAppFlow
+    from google_auth_httplib2 import AuthorizedHttp
+    from googleapiclient.discovery import build
+    import httplib2
+    GOOGLE_CALENDAR_AVAILABLE = True
+except ImportError:
+    GOOGLE_CALENDAR_AVAILABLE = False
 
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 TOKEN_FILE = 'data/google_token.json'
@@ -24,7 +26,10 @@ class CalendarTool:
     def __init__(self):
         self.service = None
         self.calendar_id = 'primary'
-        self._authenticate()
+        if GOOGLE_CALENDAR_AVAILABLE:
+            self._authenticate()
+        else:
+            self.available = False
     
     def _authenticate(self):
         """Authenticate with Google Calendar API"""
@@ -57,8 +62,8 @@ class CalendarTool:
     
     def execute(self, args):
         """Execute calendar command"""
-        if not self.service:
-            return "❌ Google Calendar not configured. See /help for setup instructions."
+        if not GOOGLE_CALENDAR_AVAILABLE or not self.service:
+            return "📅 Calendar feature requires Google Calendar setup. See /help for instructions."
         
         parts = args.strip().split(None, 2)
         

@@ -1,7 +1,4 @@
-"""
-Task management tool
-Handles task CRUD operations with JSON storage
-"""
+"""Task management with local JSON storage"""
 
 import json
 import os

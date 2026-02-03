@@ -1,7 +1,4 @@
-"""
-Study tool - note taking and AI-powered quiz generation
-Uses LLM for quiz creation based on saved notes
-"""
+"""Study notes and quiz generation"""
 
 import json
 import os
